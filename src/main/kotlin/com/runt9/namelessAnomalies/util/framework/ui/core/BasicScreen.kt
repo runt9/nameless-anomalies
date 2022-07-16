@@ -4,24 +4,28 @@ import com.badlogic.gdx.InputMultiplexer
 import com.runt9.namelessAnomalies.util.ext.lazyInject
 import com.runt9.namelessAnomalies.util.framework.ui.DialogManager
 import com.runt9.namelessAnomalies.util.framework.ui.controller.Controller
+import ktx.app.KtxScreen
 
-abstract class UiScreen : NamelessAnomaliesScreen {
-    val uiStage = NamelessAnomaliesStage()
+abstract class BasicScreen : KtxScreen {
+    val stage = BasicStage()
     val input by lazyInject<InputMultiplexer>()
     val dialogManager by lazyInject<DialogManager>()
-    override val stages = listOf(uiStage)
-    abstract val uiController: Controller
+    abstract val controller: Controller
+
+    override fun render(delta: Float) = stage.render(delta)
+    override fun dispose() = stage.dispose()
 
     override fun show() {
-        input.addProcessor(uiStage)
-        uiController.load()
-        uiStage.setView(uiController.view)
-        dialogManager.currentStage = uiStage
+        input.addProcessor(stage)
+        controller.load()
+        stage.setView(controller.view)
+        dialogManager.currentStage = stage
     }
 
     override fun hide() {
-        input.removeProcessor(uiStage)
-        uiController.dispose()
+        stage.clear()
+        input.removeProcessor(stage)
+        controller.dispose()
         dialogManager.currentStage = null
     }
 }

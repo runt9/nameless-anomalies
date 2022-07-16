@@ -4,17 +4,17 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.ai.GdxAI
 import com.runt9.namelessAnomalies.NamelessAnomaliesGame
+import com.runt9.namelessAnomalies.service.RandomizerService
 import com.runt9.namelessAnomalies.service.asset.AssetLoader
 import com.runt9.namelessAnomalies.service.asset.SkinLoader
+import com.runt9.namelessAnomalies.service.duringRun.CombatService
 import com.runt9.namelessAnomalies.service.duringRun.RunInitializer
 import com.runt9.namelessAnomalies.service.duringRun.RunServiceRegistry
 import com.runt9.namelessAnomalies.service.duringRun.RunStateService
 import com.runt9.namelessAnomalies.util.framework.event.EventBus
 import com.runt9.namelessAnomalies.util.framework.ui.DialogManager
 import com.runt9.namelessAnomalies.view.anomalySelect.AnomalySelectController
-import com.runt9.namelessAnomalies.view.duringRun.DuringRunScreen
-import com.runt9.namelessAnomalies.view.duringRun.game.DuringRunGameController
-import com.runt9.namelessAnomalies.view.duringRun.ui.DuringRunUiController
+import com.runt9.namelessAnomalies.view.duringRun.DuringRunController
 import com.runt9.namelessAnomalies.view.duringRun.ui.menu.MenuDialogController
 import com.runt9.namelessAnomalies.view.duringRun.ui.runEnd.RunEndDialogController
 import com.runt9.namelessAnomalies.view.loading.LoadingScreenController
@@ -51,6 +51,8 @@ object Injector : Context() {
 
         bindSingleton<RunServiceRegistry>()
         bindSingleton<RunStateService>()
+        bindSingleton<RandomizerService>()
+        bindSingleton<CombatService>()
 
         bindSingleton<RunInitializer>()
 
@@ -60,9 +62,7 @@ object Injector : Context() {
         bindSingleton<MainMenuScreenController>()
         bindSingleton<SettingsDialogController>()
         bindSingleton<RunEndDialogController>()
-        bindSingleton<DuringRunGameController>()
-        bindSingleton<DuringRunUiController>()
-        bindSingleton<DuringRunScreen>()
+        bindSingleton<DuringRunController>()
         bindSingleton<MenuDialogController>()
 //        bindSingleton<LootDialogController>()
     }

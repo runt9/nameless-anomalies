@@ -13,7 +13,7 @@ class RunEndDialogController(private val eventBus: EventBus, private val runStat
     override val view = injectView<RunEndDialogView>()
 
     override fun load() {
-        runStateService.load().apply { vm.runWon(hp > 0) }
+        runStateService.load().apply { vm.runWon(anomaly.currentHp > 0) }
     }
 
     fun mainMenu() {

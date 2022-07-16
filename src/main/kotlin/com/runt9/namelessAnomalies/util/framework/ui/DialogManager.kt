@@ -6,10 +6,10 @@ import com.runt9.namelessAnomalies.config.Injector
 import com.runt9.namelessAnomalies.model.event.ShowDialogRequest
 import com.runt9.namelessAnomalies.util.framework.event.EventBus
 import com.runt9.namelessAnomalies.util.framework.event.HandlesEvent
-import com.runt9.namelessAnomalies.util.framework.ui.core.NamelessAnomaliesStage
+import com.runt9.namelessAnomalies.util.framework.ui.core.BasicStage
 
 class DialogManager(private val eventBus: EventBus) : Disposable {
-    var currentStage: NamelessAnomaliesStage? = null
+    var currentStage: BasicStage? = null
 
     init {
         eventBus.registerHandlers(this)

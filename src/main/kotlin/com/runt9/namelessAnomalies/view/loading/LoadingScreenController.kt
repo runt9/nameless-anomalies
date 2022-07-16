@@ -6,13 +6,13 @@ import com.runt9.namelessAnomalies.util.ext.percent
 import com.runt9.namelessAnomalies.util.ext.naLogger
 import com.runt9.namelessAnomalies.util.framework.event.EventBus
 import com.runt9.namelessAnomalies.util.framework.event.HandlesEvent
-import com.runt9.namelessAnomalies.util.framework.ui.controller.UiScreenController
+import com.runt9.namelessAnomalies.util.framework.ui.controller.BasicScreenController
 import com.runt9.namelessAnomalies.util.framework.ui.controller.injectView
 import com.runt9.namelessAnomalies.view.mainMenu.MainMenuScreenController
 import ktx.assets.async.AssetStorage
 import ktx.async.onRenderingThread
 
-class LoadingScreenController(private val assets: AssetStorage, private val eventBus: EventBus) : UiScreenController() {
+class LoadingScreenController(private val assets: AssetStorage, private val eventBus: EventBus) : BasicScreenController() {
     private val logger = naLogger()
     override val vm = LoadingScreenViewModel()
     override val view = injectView<LoadingScreenView>()

@@ -12,9 +12,9 @@ import com.runt9.namelessAnomalies.util.ext.lazyInject
 import com.runt9.namelessAnomalies.util.ext.naLogger
 import com.runt9.namelessAnomalies.util.framework.event.EventBus
 import com.runt9.namelessAnomalies.util.framework.event.HandlesEvent
-import com.runt9.namelessAnomalies.util.framework.ui.core.NamelessAnomaliesScreen
+import com.runt9.namelessAnomalies.util.framework.ui.core.BasicScreen
 import com.runt9.namelessAnomalies.view.anomalySelect.AnomalySelectController
-import com.runt9.namelessAnomalies.view.duringRun.DuringRunScreen
+import com.runt9.namelessAnomalies.view.duringRun.DuringRunController
 import com.runt9.namelessAnomalies.view.loading.LoadingScreenController
 import com.runt9.namelessAnomalies.view.mainMenu.MainMenuScreenController
 import ktx.app.KtxGame
@@ -40,7 +40,7 @@ class NamelessAnomaliesGame : KtxGame<KtxScreen>() {
         addScreen<LoadingScreenController>()
         addScreen<MainMenuScreenController>()
         addScreen<AnomalySelectController>()
-        addScreen<DuringRunScreen>()
+        addScreen<DuringRunController>()
         setScreen<LoadingScreenController>()
     }
 
@@ -62,5 +62,5 @@ class NamelessAnomaliesGame : KtxGame<KtxScreen>() {
         app.exit()
     }
 
-    private inline fun <reified S : NamelessAnomaliesScreen> addScreen() = addScreen(inject<S>())
+    private inline fun <reified S : BasicScreen> addScreen() = addScreen(inject<S>())
 }

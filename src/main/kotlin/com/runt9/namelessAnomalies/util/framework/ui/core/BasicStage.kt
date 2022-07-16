@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.runt9.namelessAnomalies.util.framework.ui.view.View
 
-class NamelessAnomaliesStage(viewport: Viewport = ScreenViewport()) : Stage(viewport) {
+class BasicStage(viewport: Viewport = ScreenViewport()) : Stage(viewport) {
     fun render(delta: Float) {
         viewport.apply()
         act(delta)
