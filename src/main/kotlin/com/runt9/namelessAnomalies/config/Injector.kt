@@ -7,7 +7,7 @@ import com.runt9.namelessAnomalies.NamelessAnomaliesGame
 import com.runt9.namelessAnomalies.service.RandomizerService
 import com.runt9.namelessAnomalies.service.asset.AssetLoader
 import com.runt9.namelessAnomalies.service.asset.SkinLoader
-import com.runt9.namelessAnomalies.service.duringRun.CombatService
+import com.runt9.namelessAnomalies.service.duringRun.SkillService
 import com.runt9.namelessAnomalies.service.duringRun.RunInitializer
 import com.runt9.namelessAnomalies.service.duringRun.RunServiceRegistry
 import com.runt9.namelessAnomalies.service.duringRun.RunStateService
@@ -52,7 +52,7 @@ object Injector : Context() {
         bindSingleton<RunServiceRegistry>()
         bindSingleton<RunStateService>()
         bindSingleton<RandomizerService>()
-        bindSingleton<CombatService>()
+        bindSingleton<SkillService>()
 
         bindSingleton<RunInitializer>()
 

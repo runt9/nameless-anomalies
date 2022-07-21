@@ -1,5 +1,6 @@
 package com.runt9.namelessAnomalies.view.duringRun.ui.topBar
 
+import com.runt9.namelessAnomalies.model.anomaly.maxHp
 import com.runt9.namelessAnomalies.model.event.RunStateUpdated
 import com.runt9.namelessAnomalies.model.event.enqueueShowDialog
 import com.runt9.namelessAnomalies.util.framework.event.EventBus
@@ -10,6 +11,7 @@ import com.runt9.namelessAnomalies.view.duringRun.ui.menu.MenuDialogController
 import ktx.async.onRenderingThread
 import ktx.scene2d.KWidget
 import ktx.scene2d.Scene2dDsl
+import kotlin.math.roundToInt
 
 @Scene2dDsl
 fun <S> KWidget<S>.topBar(init: TopBarView.(S) -> Unit = {}) = uiComponent<S, TopBarController, TopBarView>(init = init)
@@ -23,7 +25,7 @@ class TopBarController(private val eventBus: EventBus) : Controller {
         val newState = event.newState
         vm.apply {
             hp(newState.anomaly.currentHp)
-            maxHp(newState.anomaly.maxHp)
+            maxHp(newState.anomaly.maxHp().roundToInt())
             xp(newState.anomaly.xp)
             xpToLevel(newState.anomaly.xpToLevel)
             gold(newState.gold)

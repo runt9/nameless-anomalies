@@ -27,8 +27,8 @@ class RandomizerService(private val runStateService: RunStateService, eventBus: 
         return first
     }
 
-    fun percentChance(percentChance: Float) = rng.nextFloat() <= percentChance
-    fun coinFlip() = rng.nextBoolean()
+    fun percentChance(percentChance: Float, lucky: Boolean = false) = randomize(lucky) { it.nextFloat() } <= percentChance
+    fun coinFlip(lucky: Boolean = false) = randomize(lucky) { rng.nextBoolean() }
 
     fun range(range: ClosedFloatingPointRange<Float>, lucky: Boolean = false) = randomize(lucky) {
         range.random(it)

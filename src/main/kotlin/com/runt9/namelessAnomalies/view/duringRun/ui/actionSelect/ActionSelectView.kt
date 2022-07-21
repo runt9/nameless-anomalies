@@ -23,7 +23,7 @@ class ActionSelectView(override val controller: ActionSelectController, override
                     if (vm.showingSkills.get()) {
                         val skills = vm.skillOptions.get()
                         val skillLabel = { i: Int ->
-                            label(if (skills.size > i) skills[i].definition.name else "") {
+                            label(if (skills.size > i) skills[i].name else "") {
                                 onClick { controller.skillSelected(skills[i]) }
                             }
                         }

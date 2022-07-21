@@ -1,15 +1,16 @@
 package com.runt9.namelessAnomalies.view.duringRun
 
 import com.badlogic.gdx.utils.Disposable
+import com.runt9.namelessAnomalies.model.anomaly.Anomaly
 import com.runt9.namelessAnomalies.model.event.RunEndEvent
 import com.runt9.namelessAnomalies.model.event.RunStateUpdated
 import com.runt9.namelessAnomalies.model.event.SkillSelected
 import com.runt9.namelessAnomalies.model.event.enqueueShowDialog
 import com.runt9.namelessAnomalies.model.skill.Skill
-import com.runt9.namelessAnomalies.model.skill.definition.SkillTargetType
-import com.runt9.namelessAnomalies.service.duringRun.CombatService
+import com.runt9.namelessAnomalies.model.skill.SkillTargetType
 import com.runt9.namelessAnomalies.service.duringRun.RunInitializer
 import com.runt9.namelessAnomalies.service.duringRun.RunStateService
+import com.runt9.namelessAnomalies.service.duringRun.SkillService
 import com.runt9.namelessAnomalies.util.ext.loadTexture
 import com.runt9.namelessAnomalies.util.framework.event.EventBus
 import com.runt9.namelessAnomalies.util.framework.event.HandlesEvent
@@ -26,12 +27,13 @@ class DuringRunController(
     private val runInitializer: RunInitializer,
     private val runStateService: RunStateService,
     private val assets: AssetStorage,
-    private val combatService: CombatService
+    private val skillService: SkillService
 ) : BasicScreenController() {
     override val vm = DuringRunViewModel()
     override val view = injectView<DuringRunView>()
     private val children = mutableListOf<Controller>()
     private var selectedSkill: Skill? = null
+    private lateinit var player: Anomaly
 
     @HandlesEvent
     suspend fun runEnd(event: RunEndEvent) = onRenderingThread {
@@ -54,6 +56,7 @@ class DuringRunController(
         eventBus.registerHandlers(this)
         runInitializer.initialize()
         runStateService.load().apply {
+            player = anomaly
             vm.anomaly(assets.loadTexture(anomaly.definition.texture))
             vm.enemies(enemies.map(::EnemyViewModel))
         }
@@ -73,8 +76,8 @@ class DuringRunController(
 
         val skill = selectedSkill!!
 
-        if (skill.definition.target == SkillTargetType.SINGLE) {
-            combatService.useSkillOnEnemy(skill, enemy.enemy)
+        if (skill.target == SkillTargetType.SINGLE) {
+            skillService.useSkill(skill, player, listOf(enemy.enemy))
         }
     }
 }
