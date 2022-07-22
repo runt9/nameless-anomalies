@@ -23,7 +23,8 @@ class ActionSelectView(override val controller: ActionSelectController, override
                     if (vm.showingSkills.get()) {
                         val skills = vm.skillOptions.get()
                         val skillLabel = { i: Int ->
-                            label(if (skills.size > i) skills[i].name else "") {
+                            // TODO: Gray out if on cooldown and somehow show cooldown left, maybe just in parentheses for now?
+                            label(if (skills.size > i) skills[i].definition.name else "") {
                                 onClick { controller.skillSelected(skills[i]) }
                             }
                         }

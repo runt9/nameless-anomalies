@@ -2,13 +2,15 @@ package com.runt9.namelessAnomalies.service.duringRun
 
 import com.runt9.namelessAnomalies.model.anomaly.Anomaly
 import com.runt9.namelessAnomalies.model.anomaly.baseDamage
+import com.runt9.namelessAnomalies.model.anomaly.cdr
 import com.runt9.namelessAnomalies.model.anomaly.critChance
 import com.runt9.namelessAnomalies.model.anomaly.critMulti
 import com.runt9.namelessAnomalies.model.anomaly.damageResist
 import com.runt9.namelessAnomalies.model.anomaly.dodge
 import com.runt9.namelessAnomalies.model.anomaly.maxHp
+import com.runt9.namelessAnomalies.model.anomaly.tdr
 import com.runt9.namelessAnomalies.model.attribute.Attribute
-import com.runt9.namelessAnomalies.model.interceptor.HpChangedContext
+import com.runt9.namelessAnomalies.model.event.HpChanged
 import com.runt9.namelessAnomalies.model.interceptor.InterceptableAdapter
 import com.runt9.namelessAnomalies.model.interceptor.InterceptableContext
 import com.runt9.namelessAnomalies.model.interceptor.Interceptor
@@ -21,7 +23,6 @@ import com.runt9.namelessAnomalies.model.interceptor.InterceptorHook.BEFORE_HIT_
 import com.runt9.namelessAnomalies.model.interceptor.InterceptorHook.BEFORE_SKILL_USED
 import com.runt9.namelessAnomalies.model.interceptor.InterceptorHook.BEFORE_TURN_DELAY_CALC
 import com.runt9.namelessAnomalies.model.interceptor.InterceptorHook.ON_CRIT
-import com.runt9.namelessAnomalies.model.interceptor.InterceptorHook.ON_DAMAGE_DEALT
 import com.runt9.namelessAnomalies.model.interceptor.InterceptorHook.ON_DODGE
 import com.runt9.namelessAnomalies.model.interceptor.InterceptorHook.ON_HIT
 import com.runt9.namelessAnomalies.model.interceptor.InterceptorHook.ON_NON_CRIT
@@ -32,7 +33,7 @@ import com.runt9.namelessAnomalies.util.framework.event.EventBus
 import kotlin.math.roundToInt
 
 class SkillService(
-    eventBus: EventBus,
+    private val eventBus: EventBus,
     registry: RunServiceRegistry,
     private val runStateService: RunStateService,
     private val randomizerService: RandomizerService
@@ -50,7 +51,7 @@ class SkillService(
         context.intercept(BEFORE_SKILL_USED)
 
         context.targets.forEach { target ->
-            val tag = "[${user.definition.name} (${skill.name}) -> ${target.definition.name}]: "
+            val tag = "[${user.definition.name} (${skill.definition.name}) -> ${target.definition.name}]: "
             val combatStr = StringBuilder(tag)
 
             context.currentTarget = target
@@ -120,17 +121,27 @@ class SkillService(
 
                 logger.info { combatStr.toString() }
 
-                // TODO: Make sure something is intercepting this and killing the unit if it's an enemy and firing an on kill interceptor,
-                //   or ending the run if it's the player
-                runStateService.intercept(InterceptorHook.HP_CHANGED, HpChangedContext(target, -damageOutput))
-                context.intercept(ON_DAMAGE_DEALT)
+                // TODO: Make sure consumed properly
+                eventBus.enqueueEventSync(HpChanged(target, -damageOutput))
             }
         }
 
-        // TODO: Turn delay and cooldown
-
+        context.turnDelayCheck = TurnDelayContext(skill.definition.turnDelay, user.tdr)
         context.intercept(BEFORE_TURN_DELAY_CALC)
+        context.turnDelayCheck.apply {
+            tdr.recalculate()
+            val finalTdr = baseTurnDelay / tdr()
+            user.turnDelay = finalTdr.roundToInt()
+        }
+
+        context.cooldownCheck = CooldownContext(skill.definition.cooldown, user.cdr)
         context.intercept(BEFORE_COOLDOWN_CALC)
+        context.cooldownCheck.apply {
+            cdr.recalculate()
+            // TODO: Decide if a ceil is better here, would mean cooldown could never be 0 though?
+            val finalCdr = baseCooldown / cdr()
+            skill.remainingCooldown = finalCdr.roundToInt()
+        }
 
         context.intercept(AFTER_SKILL_USED)
     }
@@ -138,7 +149,7 @@ class SkillService(
     private fun gatherInterceptorsForSkill(context: SkillUseContext): MutableMap<InterceptorHook, MutableList<Interceptor<InterceptableContext>>> {
         val interceptors = mutableMapOf<InterceptorHook, MutableList<Interceptor<InterceptableContext>>>()
 
-        val gather = { i: MutableMap<InterceptorHook, MutableList<Interceptor<InterceptableContext>>> ->
+        val gather = { i: Map<InterceptorHook, MutableList<Interceptor<InterceptableContext>>> ->
             i.forEach { (hook, ints) ->
                 val filteredInts = ints.filter { it.canIntercept(context) }
                 if (filteredInts.isNotEmpty()) {
@@ -151,7 +162,7 @@ class SkillService(
             gather(this.interceptors)
         }
 
-        gather(context.skill.interceptors)
+        gather(context.skill.definition.interceptors)
 
         return interceptors
     }
@@ -163,6 +174,8 @@ class SkillUseContext(val skill: Skill, val user: Anomaly, val targets: List<Ano
     lateinit var hitCheck: HitContext
     lateinit var critCheck: CritContext
     lateinit var damageCheck: DamageContext
+    lateinit var turnDelayCheck: TurnDelayContext
+    lateinit var cooldownCheck: CooldownContext
 }
 
 class HitContext(val dodgeChance: Attribute, var lucky: Boolean = false)
@@ -174,3 +187,5 @@ class DamageContext(val baseDamage: Attribute, val isCrit: Boolean, val critMult
         damageResist.recalculate()
     }
 }
+class TurnDelayContext(val baseTurnDelay: Int, val tdr: Attribute)
+class CooldownContext(val baseCooldown: Int, val cdr: Attribute)

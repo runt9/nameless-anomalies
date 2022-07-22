@@ -4,29 +4,30 @@ import com.runt9.namelessAnomalies.model.anomaly.definition.AnomalyDefinition
 import com.runt9.namelessAnomalies.model.attribute.Attribute
 import com.runt9.namelessAnomalies.model.attribute.AttributeType
 import com.runt9.namelessAnomalies.model.skill.Skill
+import com.runt9.namelessAnomalies.model.skill.SkillDefinition
 import com.runt9.namelessAnomalies.model.skill.SkillTarget
 import com.runt9.namelessAnomalies.model.skill.prototypeSkill
 import kotlinx.serialization.Serializable
 
 @Serializable
-class Anomaly(val definition: AnomalyDefinition) : SkillTarget {
+class Anomaly(val definition: AnomalyDefinition, val isPlayer: Boolean) : SkillTarget {
     var xp = 0
     var xpToLevel = 10
     var level = 1
 
     var currentHp = 0
+    var turnDelay = 0
+
     val attrs = AttributeType.values().associateWith { Attribute(it) }
 
-    var isAlive = true
+    val isAlive get() = currentHp > 0
 
-    lateinit var onHpChangeCb: Anomaly.() -> Unit
+    val currentSkills = mutableListOf<Skill>(Skill(prototypeSkill))
+    val possibleSkills = mutableListOf<SkillDefinition>(prototypeSkill)
 
-    fun onHpChange(onHpChangeCb: Anomaly.() -> Unit) {
-        this.onHpChangeCb = onHpChangeCb
+    fun recalculateAttrs() {
+        attrs.values.forEach(Attribute::recalculate)
     }
-
-    val currentSkills = mutableListOf<Skill>(prototypeSkill)
-    val possibleSkills = mutableListOf<Skill>(prototypeSkill)
 }
 
 val Anomaly.body get() = attrs[AttributeType.BODY]!!

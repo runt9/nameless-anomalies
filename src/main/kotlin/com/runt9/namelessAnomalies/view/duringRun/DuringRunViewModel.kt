@@ -9,4 +9,5 @@ class DuringRunViewModel : ViewModel() {
     // TODO: Probably need a better way to have an "empty" texture
     val anomaly = Binding(rectPixmapTexture(1, 1, Color.SLATE))
     val enemies = ListBinding(listOf<EnemyViewModel>())
+    val isPlayersTurn = Binding(false)
 }

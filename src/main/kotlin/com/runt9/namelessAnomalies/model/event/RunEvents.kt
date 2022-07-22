@@ -5,3 +5,4 @@ import com.runt9.namelessAnomalies.util.framework.event.Event
 
 class RunStateUpdated(val newState: RunState) : Event
 class RunEndEvent(val win: Boolean) : Event
+class BattleComplete : Event

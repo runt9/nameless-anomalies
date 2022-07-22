@@ -17,6 +17,6 @@ data class RunState(
     val dnaPoints: Int = 0,
     val floor: Int = 1,
     val room: Int = 1,
-    override val interceptors: MutableMap<InterceptorHook, MutableList<Interceptor<InterceptableContext>>> = mutableMapOf(),
-    val enemies: MutableList<Anomaly> = mutableListOf(Anomaly(prototypeEnemy), Anomaly(prototypeEnemy))
+    override var interceptors: Map<InterceptorHook, MutableList<Interceptor<InterceptableContext>>> = mapOf(),
+    var enemies: List<Anomaly> = listOf(Anomaly(prototypeEnemy, false), Anomaly(prototypeEnemy, false))
 ) : InterceptableContext

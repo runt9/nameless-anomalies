@@ -1,7 +1,5 @@
 package com.runt9.namelessAnomalies.model.interceptor
 
-import com.runt9.namelessAnomalies.model.anomaly.Anomaly
-
 enum class InterceptorHook {
     // Skill Interceptors
     BEFORE_SKILL_USED,
@@ -18,7 +16,9 @@ enum class InterceptorHook {
     AFTER_SKILL_USED,
 
     // Other Interceptors
-    HP_CHANGED
+    HP_CHANGED,
+    TURN_START,
+    TURN_END,
 }
 
 interface Interceptor<T : InterceptableContext> {
@@ -29,10 +29,14 @@ interface Interceptor<T : InterceptableContext> {
 }
 
 interface InterceptableContext {
-    val interceptors: MutableMap<InterceptorHook, MutableList<Interceptor<InterceptableContext>>>
+    val interceptors: Map<InterceptorHook, MutableList<Interceptor<InterceptableContext>>>
 
     fun intercept(hook: InterceptorHook) {
         interceptors[hook]?.filter { it.canIntercept(this) }?.forEach { it.intercept(this) }
+    }
+
+    fun intercept(hook: InterceptorHook, context: InterceptableContext) {
+        context.interceptors[hook]?.forEach { it.intercept(context) }
     }
 }
 
@@ -45,5 +49,3 @@ inline fun <reified T : InterceptableContext> intercept(hook: InterceptorHook, c
     override fun intercept(context: T) = intercept(context)
     override fun canIntercept(context: InterceptableContext) = context::class == T::class
 }
-
-class HpChangedContext(val self: Anomaly, hpChange: Float) : InterceptableAdapter()

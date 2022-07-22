@@ -37,6 +37,7 @@ class ActionSelectController(private val runStateService: RunStateService, priva
 
     fun skillSelected(skill: Skill) {
         if (!vm.canInteract.get()) return
+        if (skill.remainingCooldown > 0) return
 
         vm.canInteract(false)
         eventBus.enqueueEventSync(SkillSelected(skill))

@@ -2,12 +2,17 @@ package com.runt9.namelessAnomalies.view.duringRun
 
 import com.badlogic.gdx.utils.Disposable
 import com.runt9.namelessAnomalies.model.anomaly.Anomaly
+import com.runt9.namelessAnomalies.model.event.BattleComplete
+import com.runt9.namelessAnomalies.model.event.PlayerTurnReady
 import com.runt9.namelessAnomalies.model.event.RunEndEvent
 import com.runt9.namelessAnomalies.model.event.RunStateUpdated
 import com.runt9.namelessAnomalies.model.event.SkillSelected
+import com.runt9.namelessAnomalies.model.event.TurnComplete
 import com.runt9.namelessAnomalies.model.event.enqueueShowDialog
 import com.runt9.namelessAnomalies.model.skill.Skill
 import com.runt9.namelessAnomalies.model.skill.SkillTargetType
+import com.runt9.namelessAnomalies.service.duringRun.AttributeService
+import com.runt9.namelessAnomalies.service.duringRun.BattleManager
 import com.runt9.namelessAnomalies.service.duringRun.RunInitializer
 import com.runt9.namelessAnomalies.service.duringRun.RunStateService
 import com.runt9.namelessAnomalies.service.duringRun.SkillService
@@ -27,7 +32,9 @@ class DuringRunController(
     private val runInitializer: RunInitializer,
     private val runStateService: RunStateService,
     private val assets: AssetStorage,
-    private val skillService: SkillService
+    private val skillService: SkillService,
+    private val battleManager: BattleManager,
+    private val attributeService: AttributeService
 ) : BasicScreenController() {
     override val vm = DuringRunViewModel()
     override val view = injectView<DuringRunView>()
@@ -52,6 +59,16 @@ class DuringRunController(
         selectedSkill = event.skill
     }
 
+    @HandlesEvent
+    suspend fun playerReady(event: PlayerTurnReady) = onRenderingThread {
+        vm.isPlayersTurn(true)
+    }
+
+    @HandlesEvent(BattleComplete::class)
+    suspend fun battleComplete() = onRenderingThread {
+        // TODO: Do cleanup, show loot menu, and allow moving to the next room
+    }
+
     override fun load() {
         eventBus.registerHandlers(this)
         runInitializer.initialize()
@@ -60,6 +77,10 @@ class DuringRunController(
             vm.anomaly(assets.loadTexture(anomaly.definition.texture))
             vm.enemies(enemies.map(::EnemyViewModel))
         }
+        attributeService.performInitialAttributeCalculation(player)
+
+        // TODO: This should come from selecting the first node to go to
+        battleManager.startBattle()
     }
 
     override fun dispose() {
@@ -76,8 +97,10 @@ class DuringRunController(
 
         val skill = selectedSkill!!
 
-        if (skill.target == SkillTargetType.SINGLE) {
+        if (skill.definition.target == SkillTargetType.SINGLE) {
             skillService.useSkill(skill, player, listOf(enemy.enemy))
+            vm.isPlayersTurn(false)
+            eventBus.enqueueEventSync(TurnComplete())
         }
     }
 }

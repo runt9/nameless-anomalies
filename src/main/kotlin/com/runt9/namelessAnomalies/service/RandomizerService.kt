@@ -15,7 +15,7 @@ class RandomizerService(private val runStateService: RunStateService, eventBus: 
         rng = Random(state.seed.hashCode())
     }
 
-    fun <T> randomize(action: (Random) -> T) = action(rng)
+    fun <T> randomizeBasic(action: (Random) -> T) = action(rng)
 
     fun <T : Comparable<T>> randomize(lucky: Boolean = false, action: (Random) -> T): T {
         val first = action(rng)

@@ -31,5 +31,5 @@ class RunStateService(private val eventBus: EventBus, registry: RunServiceRegist
     }
 
     fun intercept(hook: InterceptorHook) = load().intercept(hook)
-    fun intercept(hook: InterceptorHook, context: InterceptableContext) = load().interceptors[hook]?.forEach { it.intercept(context) }
+    fun intercept(hook: InterceptorHook, context: InterceptableContext) = load().intercept(hook, context)
 }
