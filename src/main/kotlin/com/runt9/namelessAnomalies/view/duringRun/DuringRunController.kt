@@ -59,6 +59,11 @@ class DuringRunController(
         selectedSkill = event.skill
     }
 
+    @HandlesEvent(TurnComplete::class)
+    suspend fun turnComplete() = onRenderingThread {
+        vm.isPlayersTurn(false)
+    }
+
     @HandlesEvent
     suspend fun playerReady(event: PlayerTurnReady) = onRenderingThread {
         vm.isPlayersTurn(true)
@@ -99,8 +104,8 @@ class DuringRunController(
 
         if (skill.definition.target == SkillTargetType.SINGLE) {
             skillService.useSkill(skill, player, listOf(enemy.enemy))
-            vm.isPlayersTurn(false)
             eventBus.enqueueEventSync(TurnComplete())
+            selectedSkill = null
         }
     }
 }

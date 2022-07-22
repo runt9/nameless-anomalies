@@ -24,15 +24,40 @@ class ActionSelectView(override val controller: ActionSelectController, override
                         val skills = vm.skillOptions.get()
                         val skillLabel = { i: Int ->
                             // TODO: Gray out if on cooldown and somehow show cooldown left, maybe just in parentheses for now?
-                            label(if (skills.size > i) skills[i].definition.name else "") {
-                                onClick { controller.skillSelected(skills[i]) }
+                            val text: String
+                            val color: Color
+
+                            if (skills.size > i) {
+                                val skill = skills[i]
+                                val skillName = skill.definition.name
+                                if (!skill.isReady) {
+                                    text = "$skillName (${skill.remainingCooldown})"
+                                    color = Color.DARK_GRAY
+                                } else {
+                                    text = skillName
+                                    color = Color.WHITE
+                                }
+                            } else {
+                                text = ""
+                                color = Color.WHITE
+                            }
+
+                            label(text) {
+                                this.color = color
+                                if (skills.size > i) {
+                                    onClick { controller.skillSelected(skills[i]) }
+                                }
                             }
                         }
 
                         skillLabel(0).cell(pad = 10f, minWidth = 100f)
                         skillLabel(1).cell(pad = 10f, minWidth = 100f, row = true)
                         skillLabel(2).cell(pad = 10f, minWidth = 100f)
-                        skillLabel(3).cell(pad = 10f, minWidth = 100f)
+                        skillLabel(3).cell(pad = 10f, minWidth = 100f, row = true)
+
+                        label("Back") {
+                            onClick { controller.back() }
+                        }.cell(pad = 10f, minWidth = 100f, colspan = 2)
                     } else {
                         label("Skills") {
                             onClick { controller.showSkills() }

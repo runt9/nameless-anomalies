@@ -130,8 +130,9 @@ class SkillService(
         context.intercept(BEFORE_TURN_DELAY_CALC)
         context.turnDelayCheck.apply {
             tdr.recalculate()
-            val finalTdr = baseTurnDelay / tdr()
-            user.turnDelay = finalTdr.roundToInt()
+            val finalDelay = baseTurnDelay / tdr()
+            logger.info { "Setting turn delay to $finalDelay" }
+            user.turnDelay = finalDelay.roundToInt()
         }
 
         context.cooldownCheck = CooldownContext(skill.definition.cooldown, user.cdr)
@@ -139,8 +140,11 @@ class SkillService(
         context.cooldownCheck.apply {
             cdr.recalculate()
             // TODO: Decide if a ceil is better here, would mean cooldown could never be 0 though?
-            val finalCdr = baseCooldown / cdr()
-            skill.remainingCooldown = finalCdr.roundToInt()
+            val finalCooldown = baseCooldown / cdr()
+            logger.info { "Setting final cooldown to $finalCooldown" }
+            // NB: The +1 here is because cooldowns get ticked down at the start of each turn so this ensures the cooldown "starts ticking"
+            //   on the next turn after use
+            skill.remainingCooldown = finalCooldown.roundToInt() + 1
         }
 
         context.intercept(AFTER_SKILL_USED)
@@ -165,6 +169,20 @@ class SkillService(
         gather(context.skill.definition.interceptors)
 
         return interceptors
+    }
+
+    fun rest(anomaly: Anomaly) {
+        logger.info { "Processing rest for ${anomaly.definition.name}" }
+        // TODO: Rest interceptors
+        anomaly.currentSkills.forEach(Skill::tickDownCooldown)
+        // TODO: Decide how we wanna handle turn delay for resting
+        anomaly.turnDelay = 50
+        val maxHp = anomaly.maxHp().roundToInt()
+        if (anomaly.currentHp != maxHp) {
+            val healAmount = ((maxHp - anomaly.currentHp) * 0.2f).roundToInt()
+            anomaly.currentHp = (anomaly.currentHp + healAmount).coerceAtMost(maxHp)
+            eventBus.enqueueEventSync(HpChanged(anomaly, healAmount.toFloat()))
+        }
     }
 }
 

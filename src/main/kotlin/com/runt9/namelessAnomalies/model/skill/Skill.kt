@@ -38,8 +38,12 @@ fun skill(
 
 val prototypeSkill = skill(1, "Prototype", SkillTargetType.SINGLE, 100, 3)
 
-// TODO: Maybe could do an extension property on the definition somehow, or store the cooldown in some other global state?
 @Serializable
 class Skill(val definition: SkillDefinition) {
     var remainingCooldown = 0
+    val isReady get() = remainingCooldown == 0
+
+    fun tickDownCooldown() {
+        remainingCooldown = (remainingCooldown - 1).coerceAtLeast(0)
+    }
 }

@@ -9,6 +9,7 @@ import com.runt9.namelessAnomalies.model.event.RunEndEvent
 import com.runt9.namelessAnomalies.model.event.TurnComplete
 import com.runt9.namelessAnomalies.model.interceptor.InterceptableAdapter
 import com.runt9.namelessAnomalies.model.interceptor.InterceptorHook
+import com.runt9.namelessAnomalies.model.skill.Skill
 import com.runt9.namelessAnomalies.service.RandomizerService
 import com.runt9.namelessAnomalies.util.ext.naLogger
 import com.runt9.namelessAnomalies.util.framework.event.EventBus
@@ -52,6 +53,7 @@ class BattleManager(
         logger.info { "Next turn delay was $lowestTurnDelay" }
         anomalies.forEach { it.turnDelay -= lowestTurnDelay }
         context.currentTurn = nextAnomaly
+        nextAnomaly.currentSkills.forEach(Skill::tickDownCooldown)
 
         runStateService.intercept(InterceptorHook.TURN_START, context)
 
@@ -77,6 +79,7 @@ class BattleManager(
             return
         } else if (runState.enemies.isEmpty()) {
             logger.info { "All enemies dead, battle complete" }
+            finishBattle()
             eventBus.enqueueEventSync(BattleComplete())
             return
         }
@@ -95,10 +98,21 @@ class BattleManager(
         }
     }
 
+    private fun finishBattle() {
+        runStateService.load().anomaly.currentSkills.forEach { it.remainingCooldown = 0 }
+    }
+
     private fun processAiTurn() {
         val enemy = context.currentTurn
-        val skill = randomizer.randomizeBasic { enemy.currentSkills.random(it) }
-        skillService.useSkill(skill, context.currentTurn, listOf(runStateService.load().anomaly))
+        val availableSkills = enemy.currentSkills.filter { it.isReady }
+
+        if (availableSkills.isEmpty()) {
+            skillService.rest(enemy)
+        } else {
+            val skill = randomizer.randomizeBasic { availableSkills.random(it) }
+            skillService.useSkill(skill, context.currentTurn, listOf(runStateService.load().anomaly))
+        }
+
         eventBus.enqueueEventSync(TurnComplete())
     }
 }
