@@ -25,7 +25,7 @@ class AnomalySelectController(
     fun startRun() {
         val anomaly = vm.selectedAnomaly.get()
         val seed = vm.seed.get().ifBlank { Random.randomString(8) }
-        runStateService.save(RunState(seed = seed, Anomaly(anomaly, true)))
+        runStateService.save(RunState(seed, Anomaly(anomaly, true)))
         eventBus.enqueueChangeScreen<DuringRunController>()
     }
 }

@@ -11,6 +11,7 @@ import com.runt9.namelessAnomalies.model.event.TurnComplete
 import com.runt9.namelessAnomalies.model.event.enqueueShowDialog
 import com.runt9.namelessAnomalies.model.skill.Skill
 import com.runt9.namelessAnomalies.model.skill.SkillTargetType
+import com.runt9.namelessAnomalies.service.MapGenerator
 import com.runt9.namelessAnomalies.service.duringRun.AttributeService
 import com.runt9.namelessAnomalies.service.duringRun.BattleManager
 import com.runt9.namelessAnomalies.service.duringRun.RunInitializer
@@ -34,7 +35,8 @@ class DuringRunController(
     private val assets: AssetStorage,
     private val skillService: SkillService,
     private val battleManager: BattleManager,
-    private val attributeService: AttributeService
+    private val attributeService: AttributeService,
+    private val mapGenerator: MapGenerator
 ) : BasicScreenController() {
     override val vm = DuringRunViewModel()
     override val view = injectView<DuringRunView>()
@@ -83,6 +85,10 @@ class DuringRunController(
             vm.enemies(enemies.map(::EnemyViewModel))
         }
         attributeService.performInitialAttributeCalculation(player)
+
+        runStateService.update {
+            currentMap = mapGenerator.generateMap()
+        }
 
         // TODO: This should come from selecting the first node to go to
         battleManager.startBattle()

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.ai.GdxAI
 import com.runt9.namelessAnomalies.NamelessAnomaliesGame
+import com.runt9.namelessAnomalies.service.MapGenerator
 import com.runt9.namelessAnomalies.service.RandomizerService
 import com.runt9.namelessAnomalies.service.asset.AssetLoader
 import com.runt9.namelessAnomalies.service.asset.SkinLoader
@@ -17,6 +18,7 @@ import com.runt9.namelessAnomalies.util.framework.event.EventBus
 import com.runt9.namelessAnomalies.util.framework.ui.DialogManager
 import com.runt9.namelessAnomalies.view.anomalySelect.AnomalySelectController
 import com.runt9.namelessAnomalies.view.duringRun.DuringRunController
+import com.runt9.namelessAnomalies.view.duringRun.ui.map.MapDialogController
 import com.runt9.namelessAnomalies.view.duringRun.ui.menu.MenuDialogController
 import com.runt9.namelessAnomalies.view.duringRun.ui.runEnd.RunEndDialogController
 import com.runt9.namelessAnomalies.view.loading.LoadingScreenController
@@ -54,6 +56,7 @@ object Injector : Context() {
         bindSingleton<RunServiceRegistry>()
         bindSingleton<RunStateService>()
         bindSingleton<RandomizerService>()
+        bindSingleton<MapGenerator>()
         bindSingleton<AttributeService>()
         bindSingleton<SkillService>()
         bindSingleton<BattleManager>()
@@ -68,6 +71,6 @@ object Injector : Context() {
         bindSingleton<RunEndDialogController>()
         bindSingleton<DuringRunController>()
         bindSingleton<MenuDialogController>()
-//        bindSingleton<LootDialogController>()
+        bindSingleton<MapDialogController>()
     }
 }

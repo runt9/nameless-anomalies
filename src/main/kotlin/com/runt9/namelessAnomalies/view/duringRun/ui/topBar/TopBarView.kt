@@ -22,7 +22,12 @@ class TopBarView(override val controller: TopBarController, override val vm: Top
         }.cell(expand = true, align = Align.left, padLeft = 5f)
 
         visTable {
-            visLabel("") { bindLabelText { "Room ${vm.floor()}:${vm.room()}" } }.cell(expand = true)
+            visLabel("") { bindLabelText { "Floor: ${vm.floor()}" } }.cell(expand = true)
+
+            textButton("Map") {
+                bindButtonDisabled(vm.isDuringBattle, true)
+                onChange { controller.mapButtonClicked() }
+            }.cell(expand = true)
 
             textButton("Hero") {
                 bindButtonDisabled(vm.isDuringBattle, true)

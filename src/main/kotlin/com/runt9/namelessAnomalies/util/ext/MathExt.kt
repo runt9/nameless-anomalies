@@ -1,6 +1,11 @@
 package com.runt9.namelessAnomalies.util.ext
 
+import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
+import kotlin.math.atan2
+import kotlin.math.cos
 import kotlin.math.roundToInt
+import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.random.Random
 
@@ -26,3 +31,14 @@ fun Float.clamp(min: Float? = null, max: Float? = null) = when {
 }
 
 data class Size(val width: Float, val height: Float)
+
+val Float.radDeg get() = this * MathUtils.radDeg
+val Float.degRad get() = this * MathUtils.degRad
+fun Vector2.toAngle() = atan2(-x.toDouble(), y.toDouble()).toFloat()
+
+fun Float.toVector(outVector: Vector2): Vector2 {
+    outVector.x = (-sin(toDouble())).toFloat()
+    outVector.y = cos(toDouble()).toFloat()
+    return outVector
+}
+
