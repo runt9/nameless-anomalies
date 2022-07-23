@@ -1,7 +1,6 @@
 package com.runt9.namelessAnomalies.model
 
 import com.runt9.namelessAnomalies.model.anomaly.Anomaly
-import com.runt9.namelessAnomalies.model.anomaly.definition.prototypeEnemy
 import com.runt9.namelessAnomalies.model.graph.MapGraph
 import com.runt9.namelessAnomalies.model.graph.node.RootNode
 import com.runt9.namelessAnomalies.model.interceptor.InterceptableContext
@@ -19,6 +18,7 @@ data class RunState(
     var dnaPoints: Int = 0,
     var currentMap: MapGraph = MapGraph(RootNode()),
     var floor: Int = 1,
+    var inBattle: Boolean = false,
     override var interceptors: Map<InterceptorHook, MutableList<Interceptor<InterceptableContext>>> = mapOf(),
-    var enemies: List<Anomaly> = listOf(Anomaly(prototypeEnemy, false), Anomaly(prototypeEnemy, false))
+    var enemies: List<Anomaly> = listOf()
 ) : InterceptableContext

@@ -4,12 +4,13 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.ai.GdxAI
 import com.runt9.namelessAnomalies.NamelessAnomaliesGame
-import com.runt9.namelessAnomalies.service.MapGenerator
 import com.runt9.namelessAnomalies.service.RandomizerService
 import com.runt9.namelessAnomalies.service.asset.AssetLoader
 import com.runt9.namelessAnomalies.service.asset.SkinLoader
 import com.runt9.namelessAnomalies.service.duringRun.AttributeService
 import com.runt9.namelessAnomalies.service.duringRun.BattleManager
+import com.runt9.namelessAnomalies.service.duringRun.EnemyService
+import com.runt9.namelessAnomalies.service.duringRun.MapService
 import com.runt9.namelessAnomalies.service.duringRun.RunInitializer
 import com.runt9.namelessAnomalies.service.duringRun.RunServiceRegistry
 import com.runt9.namelessAnomalies.service.duringRun.RunStateService
@@ -56,10 +57,11 @@ object Injector : Context() {
         bindSingleton<RunServiceRegistry>()
         bindSingleton<RunStateService>()
         bindSingleton<RandomizerService>()
-        bindSingleton<MapGenerator>()
         bindSingleton<AttributeService>()
+        bindSingleton<EnemyService>()
         bindSingleton<SkillService>()
         bindSingleton<BattleManager>()
+        bindSingleton<MapService>()
 
         bindSingleton<RunInitializer>()
 

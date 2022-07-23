@@ -19,9 +19,9 @@ class BattleManager(
     private val eventBus: EventBus,
     registry: RunServiceRegistry,
     private val runStateService: RunStateService,
-    private val attributeService: AttributeService,
     private val randomizer: RandomizerService,
-    private val skillService: SkillService
+    private val skillService: SkillService,
+    private val enemyService: EnemyService
 ) : RunService(eventBus, registry) {
     private val logger = naLogger()
     private lateinit var context: BattleContext
@@ -38,10 +38,12 @@ class BattleManager(
 
     fun startBattle() {
         logger.info { "Battle start" }
-        val state = runStateService.load()
-        state.enemies.forEach(attributeService::performInitialAttributeCalculation)
-
-        context = BattleContext(state.anomaly, state.enemies)
+        val enemies = enemyService.generateEnemies()
+        runStateService.update {
+            this.enemies = enemies
+        }
+        val player = runStateService.load().anomaly
+        context = BattleContext(player, enemies)
         nextTurn()
     }
 

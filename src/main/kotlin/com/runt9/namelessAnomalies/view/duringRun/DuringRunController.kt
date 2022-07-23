@@ -11,9 +11,9 @@ import com.runt9.namelessAnomalies.model.event.TurnComplete
 import com.runt9.namelessAnomalies.model.event.enqueueShowDialog
 import com.runt9.namelessAnomalies.model.skill.Skill
 import com.runt9.namelessAnomalies.model.skill.SkillTargetType
-import com.runt9.namelessAnomalies.service.MapGenerator
 import com.runt9.namelessAnomalies.service.duringRun.AttributeService
 import com.runt9.namelessAnomalies.service.duringRun.BattleManager
+import com.runt9.namelessAnomalies.service.duringRun.MapService
 import com.runt9.namelessAnomalies.service.duringRun.RunInitializer
 import com.runt9.namelessAnomalies.service.duringRun.RunStateService
 import com.runt9.namelessAnomalies.service.duringRun.SkillService
@@ -24,6 +24,7 @@ import com.runt9.namelessAnomalies.util.framework.ui.controller.BasicScreenContr
 import com.runt9.namelessAnomalies.util.framework.ui.controller.Controller
 import com.runt9.namelessAnomalies.util.framework.ui.controller.injectView
 import com.runt9.namelessAnomalies.view.duringRun.enemy.EnemyViewModel
+import com.runt9.namelessAnomalies.view.duringRun.ui.map.MapDialogController
 import com.runt9.namelessAnomalies.view.duringRun.ui.runEnd.RunEndDialogController
 import ktx.assets.async.AssetStorage
 import ktx.async.onRenderingThread
@@ -36,7 +37,7 @@ class DuringRunController(
     private val skillService: SkillService,
     private val battleManager: BattleManager,
     private val attributeService: AttributeService,
-    private val mapGenerator: MapGenerator
+    private val mapService: MapService
 ) : BasicScreenController() {
     override val vm = DuringRunViewModel()
     override val view = injectView<DuringRunView>()
@@ -53,6 +54,7 @@ class DuringRunController(
     @HandlesEvent
     suspend fun runStateUpdated(event: RunStateUpdated) = onRenderingThread {
         val newState = event.newState
+        // TODO: Don't redraw enemies on every run state update
         vm.enemies(newState.enemies.map(::EnemyViewModel))
     }
 
@@ -87,11 +89,10 @@ class DuringRunController(
         attributeService.performInitialAttributeCalculation(player)
 
         runStateService.update {
-            currentMap = mapGenerator.generateMap()
+            currentMap = mapService.generateMap()
         }
 
-        // TODO: This should come from selecting the first node to go to
-        battleManager.startBattle()
+        eventBus.enqueueShowDialog<MapDialogController>()
     }
 
     override fun dispose() {

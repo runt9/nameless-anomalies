@@ -43,17 +43,6 @@ class DuringRunView(
                         }
                     }
                 }.cell(grow = true, row = true)
-
-                // TODO: This likely shouldn't be in this table since its size changing can affect the row above
-                // Action selection
-                visTable {
-                    bindUpdatable(vm.isPlayersTurn) {
-                        clear()
-                        if (vm.isPlayersTurn.get()) {
-                            actionSelect()
-                        }
-                    }
-                }.cell(growX = true, pad = 10f, row = true)
             }.cell(grow = true)
 
             // Enemies
@@ -72,5 +61,16 @@ class DuringRunView(
                 }
             }.cell(grow = true, row = true)
         }.cell(grow = true, row = true)
+
+        // TODO: This likely shouldn't be in this table since its size changing can affect the row above
+        // Action selection
+        visTable {
+            bindUpdatable(vm.isPlayersTurn) {
+                clear()
+                if (vm.isPlayersTurn.get()) {
+                    actionSelect()
+                }
+            }
+        }.cell(growX = true, pad = 10f, row = true)
     }
 }

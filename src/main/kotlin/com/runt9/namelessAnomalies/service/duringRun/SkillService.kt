@@ -179,7 +179,7 @@ class SkillService(
         anomaly.turnDelay = 50
         val maxHp = anomaly.maxHp().roundToInt()
         if (anomaly.currentHp != maxHp) {
-            val healAmount = ((maxHp - anomaly.currentHp) * 0.2f).roundToInt()
+            val healAmount = ((maxHp - anomaly.currentHp) * 0.1f).roundToInt()
             anomaly.currentHp = (anomaly.currentHp + healAmount).coerceAtMost(maxHp)
             eventBus.enqueueEventSync(HpChanged(anomaly, healAmount.toFloat()))
         }

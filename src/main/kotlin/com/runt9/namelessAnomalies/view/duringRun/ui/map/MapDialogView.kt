@@ -13,6 +13,7 @@ import com.runt9.namelessAnomalies.util.ext.ui.rectPixmapTexture
 import com.runt9.namelessAnomalies.util.framework.ui.view.DialogView
 import ktx.actors.centerPosition
 import ktx.actors.onChange
+import ktx.actors.onClick
 import ktx.scene2d.KTable
 import ktx.scene2d.textButton
 import ktx.scene2d.vis.KFloatingGroup
@@ -28,6 +29,7 @@ class MapDialogView(
     override val heightScale: Float = 0.9f
 
     // TODO: This can't be different every time the dialog is opened
+    // TODO: Somehow during generation the map has to be aware of collisions and prevent it
     override fun KTable.initContentTable() {
         floatingGroup {
             setOrigin(Align.center)
@@ -55,12 +57,17 @@ class MapDialogView(
                 rotation = currentAngle
             }
 
+            val nextNode = c.toNode
+
             val nextNodeImg = visImage(circlePixmapTexture(10, true, Color.WHITE)) {
                 val nodePos = Vector2(previousNode.x, previousNode.y).mulAdd((currentAngle - 90f).degRad.toVector(Vector2()), 40f)
                 setPosition(nodePos.x, nodePos.y)
+
+                onClick {
+                    controller.nodeClicked(nextNode, c)
+                }
             }
 
-            val nextNode = c.toNode
             if (nextNode.outgoingConnections.isNotEmpty()) {
                 doConnections(nextNode.outgoingConnections, nextNodeImg, currentAngle)
             }

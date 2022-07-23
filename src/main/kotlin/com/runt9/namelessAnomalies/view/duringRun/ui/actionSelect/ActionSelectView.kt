@@ -1,6 +1,7 @@
 package com.runt9.namelessAnomalies.view.duringRun.ui.actionSelect
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.utils.Align
 import com.runt9.namelessAnomalies.util.ext.ui.bindUpdatable
 import com.runt9.namelessAnomalies.util.ext.ui.rectPixmapTexture
 import com.runt9.namelessAnomalies.util.ext.ui.toDrawable
@@ -23,7 +24,6 @@ class ActionSelectView(override val controller: ActionSelectController, override
                     if (vm.showingSkills.get()) {
                         val skills = vm.skillOptions.get()
                         val skillLabel = { i: Int ->
-                            // TODO: Gray out if on cooldown and somehow show cooldown left, maybe just in parentheses for now?
                             val text: String
                             val color: Color
 
@@ -60,16 +60,19 @@ class ActionSelectView(override val controller: ActionSelectController, override
                         }.cell(pad = 10f, minWidth = 100f, colspan = 2)
                     } else {
                         label("Skills") {
+                            setAlignment(Align.center)
                             onClick { controller.showSkills() }
-                        }.cell(expand = true, pad = 10f)
+                        }.cell(grow = true, pad = 10f, minWidth = 100f)
 
                         label("Rest") {
+                            setAlignment(Align.center)
                             onClick { controller.rest() }
-                        }.cell(expand = true, pad = 10f, row = true)
+                        }.cell(grow = true, pad = 10f, minWidth = 100f, row = true)
 
                         label("Items") {
+                            setAlignment(Align.center)
                             onClick { controller.items() }
-                        }.cell(expand = true, colspan = 2, pad = 10f)
+                        }.cell(grow = true, colspan = 2, pad = 10f)
                     }
                 }
             }

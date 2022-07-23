@@ -40,6 +40,8 @@ class EnemyController(private val eventBus: EventBus) : Controller {
     }
 
     override fun load() {
+        vm.currentHp(vm.enemy.currentHp)
+        vm.maxHp(vm.enemy.maxHp().roundToInt())
         eventBus.registerHandlers(this)
     }
 

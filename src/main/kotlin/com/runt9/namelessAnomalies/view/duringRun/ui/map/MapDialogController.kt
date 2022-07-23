@@ -1,10 +1,14 @@
 package com.runt9.namelessAnomalies.view.duringRun.ui.map
 
+import com.runt9.namelessAnomalies.model.graph.Connection
+import com.runt9.namelessAnomalies.model.graph.node.Node
+import com.runt9.namelessAnomalies.model.graph.node.RootNode
+import com.runt9.namelessAnomalies.service.duringRun.MapService
 import com.runt9.namelessAnomalies.service.duringRun.RunStateService
 import com.runt9.namelessAnomalies.util.framework.ui.controller.DialogController
 import com.runt9.namelessAnomalies.util.framework.ui.controller.injectView
 
-class MapDialogController(private val runStateService: RunStateService) : DialogController() {
+class MapDialogController(private val runStateService: RunStateService, private val mapService: MapService) : DialogController() {
     override val vm = MapDialogViewModel()
     override val view = injectView<MapDialogView>()
 
@@ -15,6 +19,16 @@ class MapDialogController(private val runStateService: RunStateService) : Dialog
     }
 
     fun close() {
+        hide()
+    }
+
+    fun nodeClicked(nextNode: Node, incomingConnection: Connection) {
+        if (!incomingConnection.explored) return
+        if (runStateService.load().inBattle) return
+        if (nextNode is RootNode) return
+        if (nextNode.isEmpty) return
+
+        mapService.travelToNode(nextNode)
         hide()
     }
 }
