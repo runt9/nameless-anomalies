@@ -23,7 +23,7 @@ class ActionSelectController(private val runStateService: RunStateService, priva
         if (!vm.canInteract.get()) return
 
         runStateService.load().apply {
-            vm.skillOptions(anomaly.currentSkills)
+            vm.skillOptions(anomaly.activeSkills)
         }
 
         vm.showingSkills(true)

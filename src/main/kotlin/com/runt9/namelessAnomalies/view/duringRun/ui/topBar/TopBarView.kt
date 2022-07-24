@@ -29,7 +29,7 @@ class TopBarView(override val controller: TopBarController, override val vm: Top
                 onChange { controller.mapButtonClicked() }
             }.cell(expand = true)
 
-            textButton("Hero") {
+            textButton("Anomaly") {
                 bindButtonDisabled(vm.isDuringBattle, true)
                 onChange { controller.anomalyButtonClicked() }
             }.cell(expand = true)

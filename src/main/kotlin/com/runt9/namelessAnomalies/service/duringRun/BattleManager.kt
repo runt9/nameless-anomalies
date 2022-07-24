@@ -56,7 +56,7 @@ class BattleManager(
         logger.info { "Next turn delay was $lowestTurnDelay" }
         anomalies.forEach { it.turnDelay -= lowestTurnDelay }
         context.currentTurn = nextAnomaly
-        nextAnomaly.currentSkills.forEach(Skill::tickDownCooldown)
+        nextAnomaly.activeSkills.forEach(Skill::tickDownCooldown)
 
         runStateService.intercept(InterceptorHook.TURN_START, context)
 
@@ -105,12 +105,12 @@ class BattleManager(
         runStateService.update {
             inBattle = false
         }
-        runStateService.load().anomaly.currentSkills.forEach { it.remainingCooldown = 0 }
+        runStateService.load().anomaly.activeSkills.forEach { it.remainingCooldown = 0 }
     }
 
     private fun processAiTurn() {
         val enemy = context.currentTurn
-        val availableSkills = enemy.currentSkills.filter { it.isReady }
+        val availableSkills = enemy.activeSkills.filter { it.isReady }
 
         if (availableSkills.isEmpty()) {
             skillService.rest(enemy)

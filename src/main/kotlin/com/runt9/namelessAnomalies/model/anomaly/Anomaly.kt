@@ -25,7 +25,7 @@ class Anomaly(val definition: AnomalyDefinition, val isPlayer: Boolean) : SkillT
 
     val isAlive get() = currentHp > 0
 
-    val currentSkills = mutableListOf<Skill>(Skill(prototypeSkill))
+    val activeSkills = mutableListOf<Skill>(Skill(prototypeSkill))
     val possibleSkills = mutableListOf<SkillDefinition>(prototypeSkill)
 
     fun gainXp(xp: Int): Boolean {

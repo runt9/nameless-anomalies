@@ -12,6 +12,7 @@ import com.runt9.namelessAnomalies.util.framework.ui.controller.Controller
 import com.runt9.namelessAnomalies.util.framework.ui.uiComponent
 import com.runt9.namelessAnomalies.view.duringRun.ui.map.MapDialogController
 import com.runt9.namelessAnomalies.view.duringRun.ui.menu.MenuDialogController
+import com.runt9.namelessAnomalies.view.duringRun.ui.player.PlayerAnomalyDialogController
 import ktx.async.onRenderingThread
 import ktx.scene2d.KWidget
 import ktx.scene2d.Scene2dDsl
@@ -74,7 +75,7 @@ class TopBarController(private val eventBus: EventBus) : Controller {
     }
 
     fun mapButtonClicked() = eventBus.enqueueShowDialog<MapDialogController>()
-    fun anomalyButtonClicked() = Unit
+    fun anomalyButtonClicked() = eventBus.enqueueShowDialog<PlayerAnomalyDialogController>()
     fun bossButtonClicked() = Unit
     fun menuButtonClicked() = eventBus.enqueueShowDialog<MenuDialogController>()
 

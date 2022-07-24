@@ -174,7 +174,7 @@ class SkillService(
     fun rest(anomaly: Anomaly) {
         logger.info { "Processing rest for ${anomaly.definition.name}" }
         // TODO: Rest interceptors
-        anomaly.currentSkills.forEach(Skill::tickDownCooldown)
+        anomaly.activeSkills.forEach(Skill::tickDownCooldown)
         // TODO: Decide how we wanna handle turn delay for resting
         anomaly.turnDelay = 50
         val maxHp = anomaly.maxHp().roundToInt()

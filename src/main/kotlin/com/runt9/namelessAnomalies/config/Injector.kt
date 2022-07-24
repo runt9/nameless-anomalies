@@ -24,6 +24,7 @@ import com.runt9.namelessAnomalies.view.duringRun.DuringRunController
 import com.runt9.namelessAnomalies.view.duringRun.ui.loot.LootDialogController
 import com.runt9.namelessAnomalies.view.duringRun.ui.map.MapDialogController
 import com.runt9.namelessAnomalies.view.duringRun.ui.menu.MenuDialogController
+import com.runt9.namelessAnomalies.view.duringRun.ui.player.PlayerAnomalyDialogController
 import com.runt9.namelessAnomalies.view.duringRun.ui.runEnd.RunEndDialogController
 import com.runt9.namelessAnomalies.view.loading.LoadingScreenController
 import com.runt9.namelessAnomalies.view.mainMenu.MainMenuScreenController
@@ -80,5 +81,6 @@ object Injector : Context() {
         bindSingleton<MenuDialogController>()
         bindSingleton<MapDialogController>()
         bindSingleton<LootDialogController>()
+        bindSingleton<PlayerAnomalyDialogController>()
     }
 }
