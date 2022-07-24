@@ -8,7 +8,7 @@ class TopBarViewModel : ViewModel() {
     val xp = Binding(0)
     val xpToLevel = Binding(0)
     val dnaPoints = Binding(0)
-    val gold = Binding(0)
+    val cells = Binding(0)
     val floor = Binding(1)
     val isDuringBattle = Binding(false)
 }

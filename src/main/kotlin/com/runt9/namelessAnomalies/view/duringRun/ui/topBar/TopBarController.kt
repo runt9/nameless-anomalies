@@ -3,6 +3,7 @@ package com.runt9.namelessAnomalies.view.duringRun.ui.topBar
 import com.runt9.namelessAnomalies.model.anomaly.maxHp
 import com.runt9.namelessAnomalies.model.event.AttributesUpdated
 import com.runt9.namelessAnomalies.model.event.HpChanged
+import com.runt9.namelessAnomalies.model.event.PlayerUpdated
 import com.runt9.namelessAnomalies.model.event.RunStateUpdated
 import com.runt9.namelessAnomalies.model.event.enqueueShowDialog
 import com.runt9.namelessAnomalies.util.framework.event.EventBus
@@ -51,15 +52,22 @@ class TopBarController(private val eventBus: EventBus) : Controller {
             maxHp(newState.anomaly.maxHp().roundToInt())
             xp(newState.anomaly.xp)
             xpToLevel(newState.anomaly.xpToLevel)
-            gold(newState.gold)
+            cells(newState.cells)
             dnaPoints(newState.dnaPoints)
             floor(newState.floor)
         }
     }
 
-//    @HandlesEvent(NewBattleEvent::class) suspend fun newBattle() = onRenderingThread { vm.isDuringBattle(false) }
-//    @HandlesEvent(BattleStartedEvent::class) suspend fun battleStart() = onRenderingThread { vm.isDuringBattle(true) }
-//    @HandlesEvent(BattleCompletedEvent::class) suspend fun battleComplete() = onRenderingThread { vm.isDuringBattle(false) }
+    @HandlesEvent
+    suspend fun playerUpdated(event: PlayerUpdated) = onRenderingThread {
+        val anomaly = event.anomaly
+        vm.apply {
+            hp(anomaly.currentHp)
+            maxHp(anomaly.maxHp().roundToInt())
+            xp(anomaly.xp)
+            xpToLevel(anomaly.xpToLevel)
+        }
+    }
 
     override fun load() {
         eventBus.registerHandlers(this)

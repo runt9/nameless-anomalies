@@ -14,7 +14,7 @@ import kotlin.random.Random
 data class RunState(
     val seed: String = Random.randomString(8),
     val anomaly: Anomaly,
-    var gold: Int = 0,
+    var cells: Int = 0,
     var dnaPoints: Int = 0,
     var currentMap: MapGraph = MapGraph(RootNode()),
     var floor: Int = 1,

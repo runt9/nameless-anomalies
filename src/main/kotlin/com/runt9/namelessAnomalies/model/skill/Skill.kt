@@ -36,7 +36,7 @@ fun skill(
     override val interceptors = interceptors
 }
 
-val prototypeSkill = skill(1, "Prototype", SkillTargetType.SINGLE, 100, 3)
+val prototypeSkill = skill(1, "Prototype", SkillTargetType.SINGLE, 100, 2)
 
 @Serializable
 class Skill(val definition: SkillDefinition) {

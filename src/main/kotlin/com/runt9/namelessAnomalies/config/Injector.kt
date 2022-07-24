@@ -10,6 +10,7 @@ import com.runt9.namelessAnomalies.service.asset.SkinLoader
 import com.runt9.namelessAnomalies.service.duringRun.AttributeService
 import com.runt9.namelessAnomalies.service.duringRun.BattleManager
 import com.runt9.namelessAnomalies.service.duringRun.EnemyService
+import com.runt9.namelessAnomalies.service.duringRun.LootService
 import com.runt9.namelessAnomalies.service.duringRun.MapService
 import com.runt9.namelessAnomalies.service.duringRun.RunInitializer
 import com.runt9.namelessAnomalies.service.duringRun.RunServiceRegistry
@@ -19,6 +20,7 @@ import com.runt9.namelessAnomalies.util.framework.event.EventBus
 import com.runt9.namelessAnomalies.util.framework.ui.DialogManager
 import com.runt9.namelessAnomalies.view.anomalySelect.AnomalySelectController
 import com.runt9.namelessAnomalies.view.duringRun.DuringRunController
+import com.runt9.namelessAnomalies.view.duringRun.ui.loot.LootDialogController
 import com.runt9.namelessAnomalies.view.duringRun.ui.map.MapDialogController
 import com.runt9.namelessAnomalies.view.duringRun.ui.menu.MenuDialogController
 import com.runt9.namelessAnomalies.view.duringRun.ui.runEnd.RunEndDialogController
@@ -62,6 +64,7 @@ object Injector : Context() {
         bindSingleton<SkillService>()
         bindSingleton<BattleManager>()
         bindSingleton<MapService>()
+        bindSingleton<LootService>()
 
         bindSingleton<RunInitializer>()
 
@@ -74,5 +77,6 @@ object Injector : Context() {
         bindSingleton<DuringRunController>()
         bindSingleton<MenuDialogController>()
         bindSingleton<MapDialogController>()
+        bindSingleton<LootDialogController>()
     }
 }

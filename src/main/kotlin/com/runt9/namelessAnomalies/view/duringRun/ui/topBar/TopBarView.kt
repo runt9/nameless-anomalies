@@ -15,7 +15,7 @@ class TopBarView(override val controller: TopBarController, override val vm: Top
         val controller = controller
 
         visTable {
-            visLabel("") { bindLabelText { "Gold: ${vm.gold()}" } }.cell(expand = true)
+            visLabel("") { bindLabelText { "Cells: ${vm.cells()}" } }.cell(expand = true)
             visLabel("") { bindLabelText { "DNA: ${vm.dnaPoints()}" } }.cell(expand = true)
             visLabel("") { bindLabelText { "HP: ${vm.hp()} / ${vm.maxHp()}" } }.cell(expand = true)
             visLabel("") { bindLabelText { "XP: ${vm.xp()} / ${vm.xpToLevel()}" } }.cell(expand = true)

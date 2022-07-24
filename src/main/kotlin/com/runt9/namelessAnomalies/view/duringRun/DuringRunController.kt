@@ -24,6 +24,7 @@ import com.runt9.namelessAnomalies.util.framework.ui.controller.BasicScreenContr
 import com.runt9.namelessAnomalies.util.framework.ui.controller.Controller
 import com.runt9.namelessAnomalies.util.framework.ui.controller.injectView
 import com.runt9.namelessAnomalies.view.duringRun.enemy.EnemyViewModel
+import com.runt9.namelessAnomalies.view.duringRun.ui.loot.LootDialogController
 import com.runt9.namelessAnomalies.view.duringRun.ui.map.MapDialogController
 import com.runt9.namelessAnomalies.view.duringRun.ui.runEnd.RunEndDialogController
 import ktx.assets.async.AssetStorage
@@ -75,7 +76,7 @@ class DuringRunController(
 
     @HandlesEvent(BattleComplete::class)
     suspend fun battleComplete() = onRenderingThread {
-        // TODO: Do cleanup, show loot menu, and allow moving to the next room
+        eventBus.enqueueShowDialog<LootDialogController>()
     }
 
     override fun load() {

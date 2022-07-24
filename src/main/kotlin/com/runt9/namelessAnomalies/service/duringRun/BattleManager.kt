@@ -41,6 +41,7 @@ class BattleManager(
         val enemies = enemyService.generateEnemies()
         runStateService.update {
             this.enemies = enemies
+            inBattle = true
         }
         val player = runStateService.load().anomaly
         context = BattleContext(player, enemies)
@@ -101,6 +102,9 @@ class BattleManager(
     }
 
     private fun finishBattle() {
+        runStateService.update {
+            inBattle = false
+        }
         runStateService.load().anomaly.currentSkills.forEach { it.remainingCooldown = 0 }
     }
 

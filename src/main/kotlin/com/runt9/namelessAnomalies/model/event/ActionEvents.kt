@@ -9,3 +9,4 @@ class PlayerTurnReady : Event
 class TurnComplete : Event
 class HpChanged(val self: Anomaly, hpChange: Float) : Event
 class AttributesUpdated(val anomaly: Anomaly) : Event
+class PlayerUpdated(val anomaly: Anomaly) : Event

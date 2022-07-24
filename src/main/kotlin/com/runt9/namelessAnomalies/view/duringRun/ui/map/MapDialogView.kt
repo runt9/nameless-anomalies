@@ -36,7 +36,7 @@ class MapDialogView(
             setFillParent(true)
             pack()
 
-            val rootNode = visImage(circlePixmapTexture(10, true, Color.WHITE)) {
+            val rootNode = visImage(circlePixmapTexture(12, true, Color.FOREST)) {
                 centerPosition(this@floatingGroup.width, this@floatingGroup.height)
             }
 
@@ -52,14 +52,21 @@ class MapDialogView(
         var currentAngle = previousAngle - randomAngle
 
         connections.forEach { c ->
-            visImage(rectPixmapTexture(40, 2, Color.WHITE)) {
+            // TODO: Z-index nonsense to put this below the node
+            visImage(rectPixmapTexture(40, 2, if (c.explored) Color.WHITE else Color.GRAY)) {
                 setPosition(previousNode.x + 10, previousNode.y + 10)
                 rotation = currentAngle
             }
 
             val nextNode = c.toNode
 
-            val nextNodeImg = visImage(circlePixmapTexture(10, true, Color.WHITE)) {
+            val nodeColor = when {
+                nextNode.isEmpty -> Color.DARK_GRAY
+                nextNode.hasTravelled -> Color.GRAY
+                else -> Color.WHITE
+            }
+
+            val nextNodeImg = visImage(circlePixmapTexture(10, true, nodeColor)) {
                 val nodePos = Vector2(previousNode.x, previousNode.y).mulAdd((currentAngle - 90f).degRad.toVector(Vector2()), 40f)
                 setPosition(nodePos.x, nodePos.y)
 

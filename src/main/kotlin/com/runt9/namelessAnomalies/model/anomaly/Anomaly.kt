@@ -8,6 +8,9 @@ import com.runt9.namelessAnomalies.model.skill.SkillDefinition
 import com.runt9.namelessAnomalies.model.skill.SkillTarget
 import com.runt9.namelessAnomalies.model.skill.prototypeSkill
 import kotlinx.serialization.Serializable
+import kotlin.math.roundToInt
+
+const val ANOMALY_MAX_LEVEL = 20
 
 @Serializable
 class Anomaly(val definition: AnomalyDefinition, val isPlayer: Boolean) : SkillTarget {
@@ -27,6 +30,26 @@ class Anomaly(val definition: AnomalyDefinition, val isPlayer: Boolean) : SkillT
 
     fun recalculateAttrs() {
         attrs.values.forEach(Attribute::recalculate)
+    }
+
+    fun gainXp(xp: Int): Boolean {
+        if (level == ANOMALY_MAX_LEVEL) return false
+
+        this.xp += xp
+
+        if (this.xp >= xpToLevel) {
+            level++
+            this.xp -= xpToLevel
+            xpToLevel = (xpToLevel * 1.5).roundToInt()
+            return true
+        }
+
+        return false
+    }
+
+    fun gainLevel() {
+        // TODO: Come back to this in a minute. Probably needs to be in AttributeService. Definition needs attribute growth
+        //   And also will need the level-up rewards like DNA points, passive choices, etc
     }
 }
 
