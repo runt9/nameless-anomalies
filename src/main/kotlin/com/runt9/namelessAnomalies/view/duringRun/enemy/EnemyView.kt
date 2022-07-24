@@ -41,7 +41,6 @@ class EnemyView(
 
                     bindUpdatable(vm.currentHp) {
                         if (!vm.enemy.isAlive) return@bindUpdatable
-                        // TODO: NPE/array is empty
                         value = vm.currentHp.get().toFloat() / vm.maxHp.get().toFloat()
                     }
 

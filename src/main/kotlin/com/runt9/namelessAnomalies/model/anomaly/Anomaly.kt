@@ -28,10 +28,6 @@ class Anomaly(val definition: AnomalyDefinition, val isPlayer: Boolean) : SkillT
     val currentSkills = mutableListOf<Skill>(Skill(prototypeSkill))
     val possibleSkills = mutableListOf<SkillDefinition>(prototypeSkill)
 
-    fun recalculateAttrs() {
-        attrs.values.forEach(Attribute::recalculate)
-    }
-
     fun gainXp(xp: Int): Boolean {
         if (level == ANOMALY_MAX_LEVEL) return false
 
@@ -45,11 +41,6 @@ class Anomaly(val definition: AnomalyDefinition, val isPlayer: Boolean) : SkillT
         }
 
         return false
-    }
-
-    fun gainLevel() {
-        // TODO: Come back to this in a minute. Probably needs to be in AttributeService. Definition needs attribute growth
-        //   And also will need the level-up rewards like DNA points, passive choices, etc
     }
 }
 

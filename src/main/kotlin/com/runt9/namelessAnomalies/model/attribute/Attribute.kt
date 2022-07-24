@@ -6,6 +6,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 class Attribute(val type: AttributeType) {
     val attrMods = mutableListOf<AttributeModifier>()
+    val attrModsFromLevels = mutableListOf<AttributeModifier>()
+    val attrModsFromAttrs = mutableListOf<AttributeModifier>()
     var realValue = 0f
         private set
     var dirty = true
@@ -15,6 +17,16 @@ class Attribute(val type: AttributeType) {
 
     fun addAttributeModifier(attrMod: AttributeModifier) {
         attrMods += attrMod
+        dirty = true
+    }
+
+    fun addAttrModFromLevels(attrMod: AttributeModifier) {
+        attrModsFromLevels += attrMod
+        dirty = true
+    }
+
+    fun addAttrModFromAttrs(attrMod: AttributeModifier) {
+        attrModsFromAttrs += attrMod
         dirty = true
     }
 
@@ -29,7 +41,9 @@ class Attribute(val type: AttributeType) {
         var totalFlat = 0f
         var totalPercent = 0f
 
-        attrMods.forEach {
+        val allAttrMods = attrMods + attrModsFromAttrs + attrModsFromLevels
+
+        allAttrMods.forEach {
             totalFlat += it.flatModifier
             totalPercent += it.percentModifier
         }
@@ -37,7 +51,6 @@ class Attribute(val type: AttributeType) {
         val newValue = ((baseValue + totalFlat) * (1 + (totalPercent / 100))).clamp(clamp.min, clamp.max)
         if (newValue != realValue) {
             realValue = newValue
-            // TODO: Changed callback
         }
 
         dirty = false
@@ -46,6 +59,8 @@ class Attribute(val type: AttributeType) {
     fun clone(): Attribute {
         val attr = Attribute(type)
         attr.attrMods.addAll(attrMods)
+        attr.attrModsFromAttrs.addAll(attrModsFromAttrs)
+        attr.attrModsFromLevels.addAll(attrModsFromLevels)
         attr.recalculate()
         return attr
     }
