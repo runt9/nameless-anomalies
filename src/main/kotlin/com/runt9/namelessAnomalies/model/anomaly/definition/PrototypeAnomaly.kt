@@ -6,5 +6,8 @@ import com.runt9.namelessAnomalies.model.attribute.AttributeType.INSTINCT
 import com.runt9.namelessAnomalies.model.attribute.AttributeType.LUCK
 import com.runt9.namelessAnomalies.model.attribute.AttributeType.MIND
 
-var prototypeAnomaly = anomaly(1, "Prototype", TextureDefinition.HERO_ARROW, AnomalyType.PLAYER, mapOf(BODY to 2f, MIND to 1f, INSTINCT to 1f, LUCK to 2f))
-var prototypeEnemy = anomaly(2, "Prototype Enemy", TextureDefinition.RED_ARROW, AnomalyType.ENEMY)
+val prototypeAnomaly = anomaly(1, "Prototype", TextureDefinition.HERO_ARROW, AnomalyType.PLAYER, mapOf(BODY to 2f, MIND to 1f, INSTINCT to 1f, LUCK to 2f))
+val prototypeEnemy = anomaly(2, "Prototype Enemy", TextureDefinition.RED_ARROW, AnomalyType.ENEMY)
+
+val availablePlayerAnomalies = listOf(prototypeAnomaly)
+val availableEnemyAnomalies = listOf(prototypeEnemy)

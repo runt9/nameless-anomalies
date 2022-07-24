@@ -42,6 +42,10 @@ class Anomaly(val definition: AnomalyDefinition, val isPlayer: Boolean) : SkillT
 
         return false
     }
+
+    fun changeHp(amt: Int) {
+        currentHp = (currentHp + amt).coerceIn(0, maxHp().roundToInt())
+    }
 }
 
 val Anomaly.body get() = attrs[AttributeType.BODY]!!

@@ -1,4 +1,4 @@
 package com.runt9.namelessAnomalies.model.graph.node
 
-class RootNode : Node() {
+class RootNode : Node(0) {
 }

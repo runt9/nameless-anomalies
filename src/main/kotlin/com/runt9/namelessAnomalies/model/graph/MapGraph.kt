@@ -5,4 +5,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class MapGraph(val entrance: Node) {
+    val allNodes: List<Node> get() = getAllNodes(entrance)
+    val nodeCount: Int get() = allNodes.size
+
+    private fun getAllNodes(fromNode: Node): List<Node> {
+        val allNodes = mutableListOf<Node>()
+        fromNode.outgoingConnections.forEach {
+            allNodes.add(it.toNode)
+            allNodes.addAll(getAllNodes(it.toNode))
+        }
+        return allNodes
+    }
 }

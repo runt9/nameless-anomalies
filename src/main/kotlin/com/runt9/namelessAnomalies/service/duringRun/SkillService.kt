@@ -115,7 +115,7 @@ class SkillService(
                 val finalDamageModifier = randomizerService.randomize { it.nextInt(90, 111) } / 100f
                 val damageOutput = baseDamage() * (if (isCrit) critMulti() else 1f) * finalDamageModifier / damageResist()
 
-                target.currentHp -= damageOutput.roundToInt()
+                target.changeHp(-damageOutput.roundToInt())
 
                 combatStr.append("Damage: [Base: $baseDamage | Resist: $damageResist | Final: $damageOutput | Defender HP: ${target.currentHp} / ${target.maxHp}]")
 
@@ -180,7 +180,7 @@ class SkillService(
         val maxHp = anomaly.maxHp().roundToInt()
         if (anomaly.currentHp != maxHp) {
             val healAmount = ((maxHp - anomaly.currentHp) * 0.1f).roundToInt()
-            anomaly.currentHp = (anomaly.currentHp + healAmount).coerceAtMost(maxHp)
+            anomaly.changeHp(healAmount)
             eventBus.enqueueEventSync(HpChanged(anomaly, healAmount.toFloat()))
         }
     }

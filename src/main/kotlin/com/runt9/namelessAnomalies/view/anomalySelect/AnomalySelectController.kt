@@ -2,7 +2,7 @@ package com.runt9.namelessAnomalies.view.anomalySelect
 
 import com.runt9.namelessAnomalies.model.RunState
 import com.runt9.namelessAnomalies.model.anomaly.Anomaly
-import com.runt9.namelessAnomalies.model.anomaly.definition.prototypeAnomaly
+import com.runt9.namelessAnomalies.model.anomaly.definition.availablePlayerAnomalies
 import com.runt9.namelessAnomalies.model.event.enqueueChangeScreen
 import com.runt9.namelessAnomalies.service.duringRun.RunStateService
 import com.runt9.namelessAnomalies.util.ext.randomString
@@ -17,7 +17,7 @@ class AnomalySelectController(
     private val eventBus: EventBus,
     private val runStateService: RunStateService
 ) : BasicScreenController() {
-    override val vm = AnomalySelectViewModel(listOf(prototypeAnomaly))
+    override val vm = AnomalySelectViewModel(availablePlayerAnomalies)
     override val view = injectView<AnomalySelectView>()
 
     fun back() = eventBus.enqueueChangeScreen<MainMenuScreenController>()

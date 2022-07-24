@@ -42,3 +42,5 @@ fun Float.toVector(outVector: Vector2): Vector2 {
     return outVector
 }
 
+
+fun Boolean.toInt() = if (this) 1 else 0
