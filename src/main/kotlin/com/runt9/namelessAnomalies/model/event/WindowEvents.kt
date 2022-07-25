@@ -10,9 +10,9 @@ class ChangeScreenRequest<S : BasicScreen>(val screenClass: KClass<S>) : Event
 inline fun <reified S : BasicScreen> changeScreenRequest() = ChangeScreenRequest(S::class)
 inline fun <reified S : BasicScreen> EventBus.enqueueChangeScreen() = enqueueEventSync(changeScreenRequest<S>())
 
-class ShowDialogRequest<D : DialogController>(val dialogClass: KClass<D>) : Event
-inline fun <reified D : DialogController> showDialogRequest() = ShowDialogRequest(D::class)
-inline fun <reified S : DialogController> EventBus.enqueueShowDialog() = enqueueEventSync(showDialogRequest<S>())
+class ShowDialogRequest<D : DialogController>(val dialogClass: KClass<D>, vararg val data: Any) : Event
+inline fun <reified D : DialogController> showDialogRequest(vararg data: Any) = ShowDialogRequest(D::class, *data)
+inline fun <reified S : DialogController> EventBus.enqueueShowDialog(vararg data: Any) = enqueueEventSync(showDialogRequest<S>(*data))
 
 class ExitRequest : Event
 fun EventBus.enqueueExitRequest() = enqueueEventSync(ExitRequest())

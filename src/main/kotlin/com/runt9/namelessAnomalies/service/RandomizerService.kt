@@ -1,5 +1,7 @@
 package com.runt9.namelessAnomalies.service
 
+import com.runt9.namelessAnomalies.model.attribute.AttributeModifier
+import com.runt9.namelessAnomalies.model.attribute.AttributeType
 import com.runt9.namelessAnomalies.service.duringRun.RunService
 import com.runt9.namelessAnomalies.service.duringRun.RunServiceRegistry
 import com.runt9.namelessAnomalies.service.duringRun.RunStateService
@@ -32,5 +34,14 @@ class RandomizerService(private val runStateService: RunStateService, eventBus: 
 
     fun range(range: ClosedFloatingPointRange<Float>, lucky: Boolean = false) = randomize(lucky) {
         range.random(it)
+    }
+
+    fun randomAttributeModifier(luckyValue: Boolean, type: AttributeType): AttributeModifier {
+        val range = type.definition.rangeForRandomizer
+
+        return if (coinFlip())
+            AttributeModifier(type, flatModifier = randomize(luckyValue) { range.flat.random(it) })
+        else
+            AttributeModifier(type, percentModifier = randomize(luckyValue) { range.percent.random(it) })
     }
 }

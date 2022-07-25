@@ -11,12 +11,10 @@ import com.runt9.namelessAnomalies.util.framework.ui.controller.injectView
 class MapDialogController(private val runStateService: RunStateService, private val mapService: MapService) : DialogController() {
     override val vm = MapDialogViewModel()
     override val view = injectView<MapDialogView>()
-    private var hasDrawnOnce = false
 
     override fun load() {
         runStateService.load().apply {
             vm.map(currentMap)
-            vm.hasDrawnOnce(hasDrawnOnce)
         }
     }
 
@@ -25,7 +23,7 @@ class MapDialogController(private val runStateService: RunStateService, private 
     }
 
     fun finishedDrawing() {
-        hasDrawnOnce = true
+        vm.map.get().hasDrawnOnce = true
     }
 
     fun nodeClicked(nextNode: Node, incomingConnection: Connection) {

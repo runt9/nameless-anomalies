@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 class MapGraph(val entrance: Node) {
     val allNodes: List<Node> get() = getAllNodes(entrance)
     val nodeCount: Int get() = allNodes.size
+    var hasDrawnOnce = false
 
     private fun getAllNodes(fromNode: Node): List<Node> {
         val allNodes = mutableListOf<Node>()

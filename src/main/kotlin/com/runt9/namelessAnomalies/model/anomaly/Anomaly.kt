@@ -3,6 +3,7 @@ package com.runt9.namelessAnomalies.model.anomaly
 import com.runt9.namelessAnomalies.model.anomaly.definition.AnomalyDefinition
 import com.runt9.namelessAnomalies.model.attribute.Attribute
 import com.runt9.namelessAnomalies.model.attribute.AttributeType
+import com.runt9.namelessAnomalies.model.loot.Mutation
 import com.runt9.namelessAnomalies.model.skill.Skill
 import com.runt9.namelessAnomalies.model.skill.SkillDefinition
 import com.runt9.namelessAnomalies.model.skill.SkillTarget
@@ -22,6 +23,7 @@ class Anomaly(val definition: AnomalyDefinition, val isPlayer: Boolean) : SkillT
     var turnDelay = 0
 
     val attrs = AttributeType.values().associateWith { Attribute(it) }
+    val mutations = mutableListOf<Mutation>()
 
     val isAlive get() = currentHp > 0
 

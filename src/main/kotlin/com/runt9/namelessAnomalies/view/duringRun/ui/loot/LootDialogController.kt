@@ -8,6 +8,7 @@ import com.runt9.namelessAnomalies.service.duringRun.RunStateService
 import com.runt9.namelessAnomalies.util.framework.event.EventBus
 import com.runt9.namelessAnomalies.util.framework.ui.controller.DialogController
 import com.runt9.namelessAnomalies.util.framework.ui.controller.injectView
+import com.runt9.namelessAnomalies.view.duringRun.ui.loot.mutation.MutationSelectDialogController
 import com.runt9.namelessAnomalies.view.duringRun.ui.map.MapDialogController
 
 class LootDialogController(
@@ -21,14 +22,13 @@ class LootDialogController(
 
     override fun load() {
         lootService.generateBattleLoot().apply {
-            vm.xp(xp)
-            vm.cells(cells)
+            vm.loot = this
         }
     }
 
     fun gainXp() {
         val player = runStateService.load().anomaly
-        if (player.gainXp(vm.xp.get())) {
+        if (player.gainXp(vm.loot.xp)) {
             vm.levelUp(true)
         }
 
@@ -37,8 +37,12 @@ class LootDialogController(
 
     fun gainCells() {
         runStateService.update {
-            cells += vm.cells.get()
+            cells += vm.loot.cells
         }
+    }
+
+    fun chooseMutation() {
+        eventBus.enqueueShowDialog<MutationSelectDialogController>(vm.loot)
     }
 
     fun levelUp() {

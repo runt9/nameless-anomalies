@@ -47,7 +47,6 @@ class MapDialogView(
                 clear()
                 val rootNode = visImage(circlePixmapTexture(NODE_RADIUS.roundToInt(), true, Color.FOREST)) {
                     centerPosition(this@floatingGroup.width, this@floatingGroup.height)
-                    zIndex = 2
                 }
 
                 val map = vm.map.get()
@@ -78,7 +77,7 @@ class MapDialogView(
 
         connections.forEach { c ->
             visImage(rectPixmapTexture(CONNECTION_LENGTH.toInt(), 2, if (c.explored) Color.WHITE else Color.GRAY)) {
-                if (!vm.hasDrawnOnce.get()) {
+                if (!vm.map.get().hasDrawnOnce) {
                     c.position = Vector2(previousNode.x + NODE_RADIUS, previousNode.y + NODE_RADIUS)
                     c.rotation = currentAngle
                 }
@@ -99,7 +98,7 @@ class MapDialogView(
             val nextNodeImg = visImage(circlePixmapTexture(NODE_RADIUS.toInt(), true, nodeColor)) {
                 val nodePos = Vector2(previousNode.x, previousNode.y).mulAdd((currentAngle - 90f).degRad.toVector(Vector2()), CONNECTION_LENGTH)
 
-                if (!vm.hasDrawnOnce.get()) {
+                if (!vm.map.get().hasDrawnOnce) {
                     if (allNodePositions.any { it.dst(nodePos) <= NODE_RADIUS * 3 }) {
                         return@doConnections true
                     }

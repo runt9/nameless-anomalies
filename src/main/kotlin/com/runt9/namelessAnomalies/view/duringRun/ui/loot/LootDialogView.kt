@@ -25,16 +25,23 @@ class LootDialogView(
 //            cell.height(0f).space(0f)
         }
 
-        textButton("${vm.xp()} XP") {
+        textButton("${vm.loot.xp} XP") {
             onClick {
                 controller.gainXp()
                 buttonHandler()
             }
         }.cell(growX = true, row = true)
 
-        textButton("${vm.cells()} Cells") {
+        textButton("${vm.loot.cells} Cells") {
             onClick {
                 controller.gainCells()
+                buttonHandler()
+            }
+        }.cell(growX = true, row = true)
+
+        textButton("Choose Mutation") {
+            onClick {
+                controller.chooseMutation()
                 buttonHandler()
             }
         }.cell(growX = true, row = true)
